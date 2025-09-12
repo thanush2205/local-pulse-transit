@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Menu, X, User, Settings } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 interface NavbarProps {
   currentView: string;
@@ -34,6 +35,7 @@ const Navbar = ({ currentView, onViewChange }: NavbarProps) => {
         </Button>
       ))}
       <div className="flex items-center gap-2 lg:ml-auto">
+        <ThemeToggle />
         <Badge variant="secondary" className="bg-primary/20 text-primary">
           Live
         </Badge>
