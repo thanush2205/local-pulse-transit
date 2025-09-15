@@ -13,7 +13,7 @@
   font-size: 1.8rem;
   font-weight: 700;
   text-align: center;
-  color: #1e3a8a;
+  color: hsl(var(--foreground));
   margin-bottom: 25px;
 }
 
@@ -36,7 +36,7 @@
   display: block;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #374151;
+  color: hsl(var(--foreground));
   margin-bottom: 5px;
 }
 
@@ -90,7 +90,7 @@
 
 .route-arrow {
   font-size: 1.5rem;
-  color: #6b7280;
+  color: hsl(var(--muted-foreground));
   font-weight: bold;
 }
 

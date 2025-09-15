@@ -40,9 +40,12 @@ const Navbar = ({ currentView, onViewChange }: NavbarProps) => {
         <Badge variant="secondary" className="bg-primary/20 text-primary">
           Live
         </Badge>
-        <Link to="/login" className="h-4 w-4 mr-2">
-          Login
+        <Button variant="ghost" size="sm" asChild>
+          <Link to="/login" className="flex items-center gap-2">
+            <User className="h-4 w-4" />
+            Login
           </Link>
+        </Button>
       </div>
     </div>
   );

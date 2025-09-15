@@ -86,48 +86,34 @@ const BusTrackingPage: React.FC = () => {
           <RouteSearch onSearch={handleSearch} />
         </div>
 
-        {/* Routes Available */}
-        {searchedRoutes.length > 0 && (
-          <div className="mb-8">
-            <RoutesAvailable routes={searchedRoutes} defaultOrigin={origin} defaultDestination={destination} />
-          </div>
-        )}
+
 
         {/* Available Buses */}
         {searchedRoutes.length > 0 && (
           <div className="mb-8">
-            <AvailableBuses />
+            <AvailableBuses originName={origin} destinationName={destination} onSelectBus={setSelectedBus} />
           </div>
         )}
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Map Section */}
-          <div className="lg:col-span-2">
-            {mapView === 'tracking' ? (
-              <BusMap />
-            ) : (
-              <BusMap1 originName={origin} destinationName={destination} />
+          <div className="lg:col-span-2 space-y-6">
+            {/* Live Bus Tracking Map */}
+            <BusMap />
+
+            {/* Live tracking Map */}
+            <BusMap1 originName={origin} destinationName={destination} />
+
+            {/* Routes Map */}
+            {searchedRoutes.length > 0 && (
+              <RoutesAvailable routes={searchedRoutes} defaultOrigin={origin} defaultDestination={destination} />
             )}
-            <div className="mt-4 flex justify-center gap-4">
-              <Button
-                variant={mapView === 'tracking' ? 'default' : 'outline'}
-                onClick={() => setMapView('tracking')}
-              >
-                Live Tracking Map
-              </Button>
-              <Button
-                variant={mapView === 'routes' ? 'default' : 'outline'}
-                onClick={() => setMapView('routes')}
-              >
-                Routes Map
-              </Button>
-            </div>
           </div>
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Quick Actions */}
+            {/* Quick Actions and Recent Activity moved upwards to right side of map */}
             <Card className="border-border/50 bg-card/80 backdrop-blur shadow-elegant">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -151,7 +137,6 @@ const BusTrackingPage: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* Recent Activity */}
             <Card className="border-border/50 bg-card/80 backdrop-blur shadow-elegant">
               <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
