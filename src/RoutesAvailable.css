@@ -1,0 +1,87 @@
+.routes-container {
+    background: linear-gradient(135deg, #ffffff 0%, #e8f0ff 100%);
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    padding: 30px;
+    max-width: 800px;
+    margin: 30px auto;
+    animation: fadeIn 0.7s ease-in-out;
+    border: 1px solid #dbeafe;
+  }
+  
+  .routes-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    color: #1e3a8a;
+    margin-bottom: 25px;
+  }
+  
+  .routes-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .route-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 18px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .route-card:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+  }
+  
+  .route-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .route-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  .route-details {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-top: 4px;
+  }
+  
+  .route-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .route-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border: 2px solid;
+    border-radius: 9999px;
+    background: #f9fafb;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .route-card:hover .route-tag {
+    background-color: #f3f4f6;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  

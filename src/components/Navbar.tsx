@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Menu, X, User, Settings } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Link, NavLink } from "react-router-dom";
 
 interface NavbarProps {
   currentView: string;
@@ -39,10 +40,9 @@ const Navbar = ({ currentView, onViewChange }: NavbarProps) => {
         <Badge variant="secondary" className="bg-primary/20 text-primary">
           Live
         </Badge>
-        <Button variant="outline" size="sm">
-          <User className="h-4 w-4 mr-2" />
+        <Link to="/login" className="h-4 w-4 mr-2">
           Login
-        </Button>
+          </Link>
       </div>
     </div>
   );

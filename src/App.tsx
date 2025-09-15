@@ -1,35 +1,59 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "@/components/theme-provider";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
-import ProjectPlan from "./pages/ProjectPlan";
-import Login from "./pages/Login";
+import BusTrackingPage from "./pages/BusTrackingPage";
+import Login from "./pages/Login"; // Make sure the Login component is typed
 import Signup from "./pages/Signup";
+import ProjectPlan from "./pages/ProjectPlan";
+import NotFound from "./pages/NotFound";
+import Navbar from "./components/Navbar";
+import AdminDashboard from "./components/AdminDashboard";
 
-const queryClient = new QueryClient();
+function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [currentView, setCurrentView] = useState<string>("home");
 
-const App = () => (
-  <ThemeProvider defaultTheme="dark">
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/project-plan" element={<ProjectPlan />} />
-            <Route path="/" element={<Index />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<Index />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </ThemeProvider>
-);
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleViewChange = (view: string) => {
+    setCurrentView(view);
+  };
+
+  return (
+    <BrowserRouter>
+      <Navbar currentView={currentView} onViewChange={handleViewChange} />
+      <Routes>
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/project-plan" element={<ProjectPlan />} />
+
+        <Route
+          path="/bus-tracking"
+          element={isAuthenticated ? <BusTrackingPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/admin"
+          element={isAuthenticated ? <AdminDashboard /> : <Navigate to="/login" />}
+        />
+
+        <Route
+          path="/"
+          element={
+            currentView === "home" ? (
+              <BusTrackingPage />
+            ) : currentView === "admin" ? (
+              <AdminDashboard />
+            ) : (
+              <Index />
+            )
+          }
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
 
 export default App;

@@ -1,0 +1,111 @@
+.app-container {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom right, #f0f9ff, #e8f5e9);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  .header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1565c0;
+    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .header p {
+    font-size: 1.2rem;
+    color: #555;
+  }
+  
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  @media (min-width: 900px) {
+    .grid-container {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  .left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  }
+  
+  .success-card {
+    background: linear-gradient(to right, #e8f5e9, #e3f2fd);
+    border-left: 6px solid #43a047;
+  }
+  
+  .success-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .checkmark {
+    background: #43a047;
+    color: white;
+    border-radius: 50%;
+    padding: 6px 10px;
+    font-weight: bold;
+  }
+  
+  .route-info {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2e7d32;
+    margin: 10px 0;
+  }
+  
+  .view-button {
+    padding: 15px 25px;
+    background: linear-gradient(to right, #42a5f5, #5c6bc0);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    width: 100%;
+  }
+  
+  .view-button:hover {
+    background: linear-gradient(to right, #1e88e5, #3949ab);
+    transform: translateY(-2px);
+  }
+  
+  .bottom-section {
+    margin-top: 20px;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  

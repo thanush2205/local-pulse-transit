@@ -27,10 +27,40 @@ const Signup = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log("Signup attempt:", formData);
+    console.log("Form submitted ✅", formData);
+    if (formData.password !== formData.confirmPassword) {
+      console.error("Passwords do not match");
+      alert("Passwords do not match!");
+      return;
+    }
+
+    try {
+      const { confirmPassword, ...dataToSend } = formData;
+      const response = await fetch('http://localhost:5000/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Signup successful:', data.message);
+        alert(data.message);
+        // Handle successful signup (e.g., redirect to login page or home)
+      } else {
+        console.error('Signup failed:', data.message);
+        alert(data.message || 'Signup failed');
+        // Handle error (e.g., show error message to the user)
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      alert('Network error: Could not connect to the server. Please ensure the backend is running.');
+    }
   };
 
   return (

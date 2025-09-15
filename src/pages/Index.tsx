@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import Navbar from "@/components/Navbar";
 import LandingHero from "@/components/LandingHero";
 import BusMap from "@/components/BusMap";
@@ -6,6 +7,11 @@ import AdminDashboard from "@/components/AdminDashboard";
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<string>('landing');
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleGetStarted = () => {
+    navigate('/bus-tracking');
+  };
 
   const renderContent = () => {
     switch(currentView) {
@@ -15,7 +21,8 @@ const Index = () => {
         return <AdminDashboard />;
       case 'landing':
       default:
-        return <LandingHero onGetStarted={() => setCurrentView('home')} />;
+        // Pass the navigation function to LandingHero
+        return <LandingHero onGetStarted={handleGetStarted} />;
     }
   };
 

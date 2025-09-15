@@ -4,6 +4,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Users, Navigation, Wifi } from "lucide-react";
 
+// You might want to import a default bus image or use a placeholder
+const BusIconSVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+    <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0v1.5a3.75 3.75 0 0 1-7.5 0V6.75ZM6 2.25a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 .75.75v1.5c0 1.933-1.088 3.553-2.671 4.402A4.249 4.249 0 0 0 12 9.75c-1.053 0-2.054-.153-2.98-.423C7.088 7.303 6 5.683 6 3.75v-1.5ZM1.5 10.5a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM2.25 14.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5H3a.75.75 0 0 1-.75-.75ZM19.5 10.5a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM20.25 14.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM4.5 18.75a.75.75 0 0 0-.75.75v.75c0 .414.336.75.75.75h15a.75.75 0 0 0 .75-.75v-.75a.75.75 0 0 0-.75-.75h-15ZM12 12a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3A.75.75 0 0 1 12 12ZM3 15.75v-1.5c0-.414.336-.75.75-.75h1.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75ZM20.25 15.75v-1.5a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+  </svg>
+`;
+
 interface Bus {
   id: string;
   route: string;
@@ -14,10 +21,14 @@ interface Bus {
   lat: number;
   lng: number;
   status: 'on-time' | 'delayed' | 'early';
+  // Manually add coordinates for the stops for this demo
+  currentStopCoords: { lat: number; lng: number };
+  nextStopCoords: { lat: number; lng: number };
 }
 
 const BusMap = () => {
   const [selectedBus, setSelectedBus] = useState<Bus | null>(null);
+  const [hoveredBus, setHoveredBus] = useState<Bus | null>(null); // New state for hover
   const [buses, setBuses] = useState<Bus[]>([
     {
       id: "BUS001",
@@ -28,10 +39,12 @@ const BusMap = () => {
       occupancy: 75,
       lat: 23.8103,
       lng: 90.4125,
-      status: 'on-time'
+      status: 'on-time',
+      currentStopCoords: { lat: 23.8150, lng: 90.4100 },
+      nextStopCoords: { lat: 23.8250, lng: 90.4200 }
     },
     {
-      id: "BUS002", 
+      id: "BUS002",
       route: "Route 8 - Airport Express",
       currentStop: "Tech Park",
       nextStop: "Airport Terminal",
@@ -39,7 +52,9 @@ const BusMap = () => {
       occupancy: 45,
       lat: 23.8203,
       lng: 90.4225,
-      status: 'early'
+      status: 'early',
+      currentStopCoords: { lat: 23.8250, lng: 90.4200 },
+      nextStopCoords: { lat: 23.8350, lng: 90.4300 }
     },
     {
       id: "BUS003",
@@ -50,40 +65,54 @@ const BusMap = () => {
       occupancy: 90,
       lat: 23.8003,
       lng: 90.4025,
-      status: 'delayed'
+      status: 'delayed',
+      currentStopCoords: { lat: 23.8050, lng: 90.4000 },
+      nextStopCoords: { lat: 23.7950, lng: 90.4050 }
     }
   ]);
 
-  // Simulate real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
-      setBuses(prevBuses => 
+      setBuses(prevBuses =>
         prevBuses.map(bus => ({
           ...bus,
           eta: Math.max(0, bus.eta - 1),
           occupancy: Math.min(100, Math.max(10, bus.occupancy + Math.floor(Math.random() * 10 - 5))),
-          lat: bus.lat + (Math.random() - 0.5) * 0.001,
-          lng: bus.lng + (Math.random() - 0.5) * 0.001,
+          lat: bus.lat + (Math.random() - 0.5) * 0.0005,
+          lng: bus.lng + (Math.random() - 0.5) * 0.0008,
+          status: Math.random() < 0.1 ? (['on-time', 'delayed', 'early'][Math.floor(Math.random() * 3)] as 'on-time' | 'delayed' | 'early') : bus.status
         }))
       );
-    }, 3000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
 
   const getStatusColor = (status: string) => {
-    switch(status) {
-      case 'on-time': return 'bg-primary text-primary-foreground';
-      case 'early': return 'bg-accent text-accent-foreground';  
-      case 'delayed': return 'bg-destructive text-destructive-foreground';
-      default: return 'bg-muted text-muted-foreground';
+    switch (status) {
+      case 'on-time': return 'bg-green-500 text-white';
+      case 'early': return 'bg-blue-500 text-white';
+      case 'delayed': return 'bg-red-500 text-white';
+      default: return 'bg-gray-500 text-white';
     }
   };
 
   const getOccupancyColor = (occupancy: number) => {
-    if (occupancy < 50) return 'text-primary';
-    if (occupancy < 80) return 'text-accent';
-    return 'text-destructive';
+    if (occupancy < 50) return 'text-green-500';
+    if (occupancy < 80) return 'text-orange-500';
+    return 'text-red-500';
+  };
+
+  const mapLatToPercent = (lat: number) => {
+    const minLat = 23.79;
+    const maxLat = 23.83;
+    return ((lat - minLat) / (maxLat - minLat)) * 100;
+  };
+
+  const mapLngToPercent = (lng: number) => {
+    const minLng = 90.39;
+    const maxLng = 90.43;
+    return ((lng - minLng) / (maxLng - minLng)) * 100;
   };
 
   return (
@@ -102,9 +131,7 @@ const BusMap = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="h-[calc(100%-80px)] relative">
-            {/* Simulated Map Background */}
             <div className="w-full h-full bg-gradient-to-br from-muted/30 to-muted/60 rounded-lg relative overflow-hidden">
-              {/* Map Grid Pattern */}
               <div className="absolute inset-0 opacity-20">
                 <svg width="100%" height="100%">
                   <defs>
@@ -117,29 +144,81 @@ const BusMap = () => {
               </div>
 
               {/* Bus Markers */}
-              {buses.map((bus, index) => (
+              {buses.map((bus) => (
                 <div
                   key={bus.id}
-                  className={`absolute w-6 h-6 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center text-white text-xs font-bold shadow-glow transform hover:scale-110 ${
-                    selectedBus?.id === bus.id ? 'w-8 h-8 ring-2 ring-primary ring-offset-2' : ''
+                  className={`absolute w-8 h-8 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center text-white text-xs font-bold shadow-md transform hover:scale-125 hover:z-10 ${
+                    selectedBus?.id === bus.id ? 'ring-2 ring-primary ring-offset-2' : ''
                   }`}
                   style={{
-                    left: `${20 + index * 25}%`,
-                    top: `${30 + index * 15}%`,
-                    backgroundColor: bus.status === 'on-time' ? 'hsl(var(--primary))' : 
-                                   bus.status === 'early' ? 'hsl(var(--accent))' : 
-                                   'hsl(var(--destructive))'
+                    left: `${mapLngToPercent(bus.lng)}%`,
+                    top: `${mapLatToPercent(bus.lat)}%`,
+                    backgroundColor: bus.status === 'on-time' ? 'hsl(142.1 76.2% 36.3%)' :
+                                     bus.status === 'early' ? 'hsl(217.2 91.2% 59.8%)' :
+                                     'hsl(0 84.2% 60.2%)'
                   }}
                   onClick={() => setSelectedBus(bus)}
+                  onMouseEnter={() => setHoveredBus(bus)} // Set hovered bus
+                  onMouseLeave={() => setHoveredBus(null)} // Clear hovered bus
                 >
-                  {index + 1}
+                  {/* Conditional rendering for content */}
+                  {hoveredBus?.id === bus.id ? (
+                    <span className="text-white font-bold text-sm">{bus.id.replace('BUS', '')}</span>
+                  ) : (
+                    <div dangerouslySetInnerHTML={{ __html: BusIconSVG }} />
+                  )}
                 </div>
               ))}
+
+              {/* Stop Markers (rendered only if a bus is selected) */}
+              {selectedBus && (
+                <>
+                  {/* Current Stop Marker */}
+                  <div
+                    className="absolute w-4 h-4 rounded-full bg-primary/80 ring-2 ring-primary-foreground flex items-center justify-center animate-pulse"
+                    style={{
+                      left: `${mapLngToPercent(selectedBus.currentStopCoords.lng)}%`,
+                      top: `${mapLatToPercent(selectedBus.currentStopCoords.lat)}%`
+                    }}
+                  >
+                    <MapPin className="h-3 w-3 text-white" />
+                  </div>
+                  <div
+                    className="absolute -translate-x-1/2 bg-card/90 backdrop-blur-sm rounded-md p-1 px-2 text-xs font-semibold shadow-md"
+                    style={{
+                      left: `${mapLngToPercent(selectedBus.currentStopCoords.lng)}%`,
+                      top: `${mapLatToPercent(selectedBus.currentStopCoords.lat) - 2}%`
+                    }}
+                  >
+                    Current: {selectedBus.currentStop}
+                  </div>
+
+                  {/* Next Stop Marker */}
+                  <div
+                    className="absolute w-4 h-4 rounded-full bg-accent/80 ring-2 ring-accent-foreground flex items-center justify-center"
+                    style={{
+                      left: `${mapLngToPercent(selectedBus.nextStopCoords.lng)}%`,
+                      top: `${mapLatToPercent(selectedBus.nextStopCoords.lat)}%`
+                    }}
+                  >
+                    <Navigation className="h-3 w-3 text-white" />
+                  </div>
+                  <div
+                    className="absolute -translate-x-1/2 bg-card/90 backdrop-blur-sm rounded-md p-1 px-2 text-xs font-semibold shadow-md"
+                    style={{
+                      left: `${mapLngToPercent(selectedBus.nextStopCoords.lng)}%`,
+                      top: `${mapLatToPercent(selectedBus.nextStopCoords.lat) - 2}%`
+                    }}
+                  >
+                    Next: {selectedBus.nextStop}
+                  </div>
+                </>
+              )}
 
               {/* Route Lines */}
               <svg className="absolute inset-0 w-full h-full pointer-events-none">
                 <path
-                  d="M 100 150 Q 200 100 350 180 Q 450 250 550 200"
+                  d="M 10% 15% Q 30% 10% 50% 18% Q 70% 25% 90% 20%"
                   stroke="hsl(var(--primary))"
                   strokeWidth="3"
                   fill="none"
@@ -147,7 +226,7 @@ const BusMap = () => {
                   strokeDasharray="5,5"
                 />
                 <path
-                  d="M 80 300 Q 180 250 280 320 Q 380 380 480 340"
+                  d="M 8% 70% Q 28% 65% 48% 72% Q 68% 78% 88% 74%"
                   stroke="hsl(var(--accent))"
                   strokeWidth="3"
                   fill="none"
@@ -156,10 +235,27 @@ const BusMap = () => {
                 />
               </svg>
 
-              {/* Map Labels */}
-              <div className="absolute top-4 left-4 bg-card/90 backdrop-blur-sm rounded-lg p-2 text-xs">
+              {/* Map Labels and Legend */}
+              <div className="absolute top-4 left-4 bg-card/90 backdrop-blur-sm rounded-lg p-3 text-xs shadow-md">
+                <div className="font-semibold text-sm mb-2">Live Status Legend</div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-3 h-3 rounded-full bg-green-500"></span>
+                  <span>On-Time</span>
+                </div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-3 h-3 rounded-full bg-blue-500"></span>
+                  <span>Early</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-red-500"></span>
+                  <span>Delayed</span>
+                </div>
+              </div>
+
+              {/* Additional Map Info */}
+              <div className="absolute bottom-4 right-4 bg-card/90 backdrop-blur-sm rounded-lg p-2 text-xs">
                 <div className="font-semibold">Downtown Area</div>
-                <div className="text-muted-foreground">Live Traffic: Light</div>
+                <div className="text-muted-foreground">Traffic: Light</div>
               </div>
             </div>
           </CardContent>
@@ -189,9 +285,9 @@ const BusMap = () => {
                     {bus.status}
                   </Badge>
                 </div>
-                
+
                 <h4 className="font-semibold text-sm mb-2">{bus.route}</h4>
-                
+
                 <div className="space-y-2 text-xs text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-3 w-3" />
@@ -226,7 +322,7 @@ const BusMap = () => {
                   <h5 className="font-semibold text-primary">{selectedBus.route}</h5>
                   <p className="text-sm text-muted-foreground">Bus ID: {selectedBus.id}</p>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-3 bg-muted/50 rounded-lg">
                     <Clock className="h-5 w-5 mx-auto mb-1 text-primary" />
