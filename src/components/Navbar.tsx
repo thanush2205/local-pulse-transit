@@ -6,33 +6,28 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Link, NavLink } from "react-router-dom";
 
-interface NavbarProps {
-  currentView: string;
-  onViewChange: (view: string) => void;
-}
-
-const Navbar = ({ currentView, onViewChange }: NavbarProps) => {
+const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { id: 'home', label: 'Track Buses', icon: <MapPin className="h-4 w-4" /> },
-    { id: 'admin', label: 'Admin Panel', icon: <Settings className="h-4 w-4" /> },
+    { path: '/bus-tracking', label: 'Track Buses', icon: <MapPin className="h-4 w-4" /> },
+    { path: '/admin', label: 'Admin Panel', icon: <Settings className="h-4 w-4" /> },
   ];
 
   const NavContent = () => (
     <div className="flex flex-col lg:flex-row lg:items-center gap-4">
       {navItems.map((item) => (
         <Button
-          key={item.id}
-          variant={currentView === item.id ? "default" : "ghost"}
-          onClick={() => {
-            onViewChange(item.id);
-            setIsOpen(false);
-          }}
+          key={item.path}
+          variant="ghost"
+          asChild
+          onClick={() => setIsOpen(false)}
           className="justify-start lg:justify-center"
         >
-          {item.icon}
-          {item.label}
+          <NavLink to={item.path}>
+            {item.icon}
+            {item.label}
+          </NavLink>
         </Button>
       ))}
       <div className="flex items-center gap-2 lg:ml-auto">

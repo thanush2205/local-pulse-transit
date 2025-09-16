@@ -597,6 +597,10 @@ const BusMap: React.FC<BusMapProps> = ({ originName, destinationName }) => {
   // Create a DivIcon wrapper with the pointer and label div together
   const combinedIcon = new L.DivIcon({
     html: `
+       <img 
+          src="https://cdn-icons-png.freepik.com/512/382/382329.png"
+          style="width:27px; height:43px;"
+        />
       <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
         <!-- Info Card Above -->
         <div style="
@@ -610,16 +614,14 @@ const BusMap: React.FC<BusMapProps> = ({ originName, destinationName }) => {
           margin-bottom: 4px;
           text-align: center;
         ">
-          <img src="/bus.png" style="width:30px; height:30px; display:block; margin:0 auto 4px;" />
+          
+          <img src="https://cdn-icons-png.freepik.com/512/382/382329.png" style="width:30px; height:30px; display:block; margin:0 auto 4px;" />
           <strong>${bus.serviceNo}</strong><br/>
           Arrival: ${bus.scheduleArrival}<br />
           Depo:${bus.deportName}
         </div>
         <!-- Google Pin Below -->
-        <img 
-          src="https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png"
-          style="width:27px; height:43px;"
-        />
+       
       </div>
     `,
     className: "",

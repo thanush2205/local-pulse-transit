@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Clock, Smartphone, Users, ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-transport.jpg";
+import { Link } from "react-router-dom";
 
 interface LandingHeroProps {
   onGetStarted: () => void;
@@ -64,6 +65,7 @@ const LandingHero = ({ onGetStarted }: LandingHeroProps) => {
                 Track Buses Now
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
+              <Link to="/project-plan">
               <Button 
                 variant="outline" 
                 size="lg"
@@ -71,6 +73,7 @@ const LandingHero = ({ onGetStarted }: LandingHeroProps) => {
               >
                 View Demo
               </Button>
+              </Link>
             </div>
           </div>
 

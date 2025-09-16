@@ -11,19 +11,14 @@ import AdminDashboard from "./components/AdminDashboard";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [currentView, setCurrentView] = useState<string>("home");
 
   const handleLogin = () => {
     setIsAuthenticated(true);
   };
 
-  const handleViewChange = (view: string) => {
-    setCurrentView(view);
-  };
-
   return (
     <BrowserRouter>
-      <Navbar currentView={currentView} onViewChange={handleViewChange} />
+      <Navbar />
       <Routes>
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
@@ -38,18 +33,7 @@ function App() {
           element={isAuthenticated ? <AdminDashboard /> : <Navigate to="/login" />}
         />
 
-        <Route
-          path="/"
-          element={
-            currentView === "home" ? (
-              <BusTrackingPage />
-            ) : currentView === "admin" ? (
-              <AdminDashboard />
-            ) : (
-              <Index />
-            )
-          }
-        />
+        <Route path="/" element={<Index />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
