@@ -160,27 +160,26 @@
 
 
 import React from "react";
-import "../RoutesAvailable.css";
 
-// Traffic metadata
+// Traffic metadata with theme-aware classes
 function trafficMeta(traffic: string) {
   switch (traffic) {
-    case "low": return { label: "Low", color: "#16a34a" };
-    case "moderate": return { label: "Moderate", color: "#f59e0b" };
-    case "heavy": return { label: "Heavy", color: "#ef4444" };
-    case "severe": return { label: "Severe", color: "#7f1d1d" };
-    default: return { label: "Unknown", color: "#6b7280" };
+    case "low": return { label: "Low", className: "border-green-500 text-green-600 dark:border-green-400 dark:text-green-400" };
+    case "moderate": return { label: "Moderate", className: "border-yellow-500 text-yellow-600 dark:border-yellow-400 dark:text-yellow-400" };
+    case "heavy": return { label: "Heavy", className: "border-red-500 text-red-600 dark:border-red-400 dark:text-red-400" };
+    case "severe": return { label: "Severe", className: "border-red-800 text-red-800 dark:border-red-600 dark:text-red-600" };
+    default: return { label: "Unknown", className: "border-gray-500 text-gray-600 dark:border-gray-400 dark:text-gray-400" };
   }
 }
 
-// Incident metadata
+// Incident metadata with theme-aware classes
 function incidentMeta(incident: string) {
   switch (incident) {
-    case "none": return { label: "No incidents", color: "#10b981" };
-    case "accident": return { label: "Accident", color: "#ef4444" };
-    case "roadwork": return { label: "Road work", color: "#f59e0b" };
-    case "closure": return { label: "Road closure", color: "#111827" };
-    default: return { label: "Unknown", color: "#6b7280" };
+    case "none": return { label: "No incidents", className: "border-green-500 text-green-600 dark:border-green-400 dark:text-green-400" };
+    case "accident": return { label: "Accident", className: "border-red-500 text-red-600 dark:border-red-400 dark:text-red-400" };
+    case "roadwork": return { label: "Road work", className: "border-yellow-500 text-yellow-600 dark:border-yellow-400 dark:text-yellow-400" };
+    case "closure": return { label: "Road closure", className: "border-gray-800 text-gray-800 dark:border-gray-600 dark:text-gray-600" };
+    default: return { label: "Unknown", className: "border-gray-500 text-gray-600 dark:border-gray-400 dark:text-gray-400" };
   }
 }
 
@@ -221,29 +220,29 @@ const RoutesAvailable: React.FC<RouteAvailableProps> = ({ routes, defaultOrigin,
   }
 
   return (
-    <div className="routes-container">
-      <h2 className="routes-title">🚍 Routes Available</h2>
-      <ul className="routes-list">
+    <div className="border border-border dark:border-gray-600 rounded-lg p-4 bg-card dark:bg-gray-800 max-w-2xl shadow-sm mt-4">
+      <h2 className="text-lg font-bold text-foreground dark:text-white mb-3">🚍 Routes Available</h2>
+      <ul className="space-y-3 list-none p-0">
         {routes.map((r) => {
           const t = trafficMeta(r.traffic);
           const i = incidentMeta(r.incident ?? "none");
           return (
             <li
               key={r.id}
-              className="route-card"
+              className="flex items-center justify-between gap-3 p-3 border border-border dark:border-gray-600 rounded-lg bg-muted dark:bg-gray-700 cursor-pointer hover:bg-muted/80 dark:hover:bg-gray-600 transition-colors"
               onClick={() => openInGoogleMaps(r)}
             >
-              <div className="route-info">
-                <div className="route-name">{r.name}</div>
-                <div className="route-details">
+              <div className="flex flex-col gap-1">
+                <div className="font-semibold text-foreground dark:text-white">{r.name}</div>
+                <div className="text-sm text-muted-foreground dark:text-gray-300">
                   {r.distanceKm.toFixed(1)} km • {r.durationMin} min
                 </div>
               </div>
-              <div className="route-tags">
-                <span className="route-tag" style={{ borderColor: t.color, color: t.color }}>
+              <div className="flex gap-2">
+                <span className={`px-2 py-1 border rounded-full text-xs font-semibold ${t.className}`}>
                   {t.label} traffic
                 </span>
-                <span className="route-tag" style={{ borderColor: i.color, color: i.color }}>
+                <span className={`px-2 py-1 border rounded-full text-xs font-semibold ${i.className}`}>
                   {i.label}
                 </span>
               </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import BusTrackingPage from "./pages/BusTrackingPage";
@@ -8,13 +8,28 @@ import ProjectPlan from "./pages/ProjectPlan";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import AdminDashboard from "./components/AdminDashboard";
+import Loader from "./components/Loader";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const handleLogin = () => {
     setIsAuthenticated(true);
   };
+
+  useEffect(() => {
+    // Simulate initial loading
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // 2 seconds for demo
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <BrowserRouter>
