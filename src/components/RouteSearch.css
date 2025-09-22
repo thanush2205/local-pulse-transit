@@ -1,0 +1,141 @@
+.route-form-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  max-width: 600px;
+  margin: 30px auto;
+  animation: fadeIn 0.7s ease-in-out;
+  border: 1px solid #dbeafe;
+}
+
+.route-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  color: hsl(var(--foreground));
+  margin-bottom: 25px;
+}
+
+.route-fields {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.input-wrapper {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+
+.input-wrapper label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin-bottom: 5px;
+}
+
+.route-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: #ffffff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.route-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.suggestions li {
+  padding: 10px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s ease;
+}
+
+.suggestions li:hover {
+  background-color: #f3f4f6;
+}
+
+.suggestions li:last-child {
+  border-bottom: none;
+}
+
+.route-arrow {
+  font-size: 1.5rem;
+  color: hsl(var(--muted-foreground));
+  font-weight: bold;
+}
+
+.route-button {
+  width: 100%;
+  padding: 15px 25px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.route-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  transform: translateY(-2px);
+}
+
+.route-button:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .route-fields {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .route-arrow {
+    transform: rotate(90deg);
+  }
+}
